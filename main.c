@@ -59,8 +59,8 @@
 #define PERIPHERAL_LINK_COUNT            1                                          /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
 
 #define DEVICE_NAME                      "Yu"                               /**< Name of device. Will be included in the advertising data. */
-//#define APP_ADV_INTERVAL                 32                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 20 ms). */
-#define APP_ADV_INTERVAL                 128 //led闪烁频率高于60Hz人眼才识别不出来
+#define APP_ADV_INTERVAL                 32                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 20 ms). */
+//#define APP_ADV_INTERVAL                 128 //led闪烁频率高于60Hz人眼才识别不出来
 #define APP_ADV_TIMEOUT_IN_SECONDS       30                                        /**< The advertising timeout in units of seconds. 设置为0为一直开？ */
 
 #define APP_TIMER_PRESCALER              0                                          /**< Value of the RTC1 PRESCALER register. */
@@ -157,8 +157,11 @@ static void gap_params_init(void)
     APP_ERROR_CHECK(err_code);
                                           
 
-	sd_ble_gap_appearance_set(0);  // Set appearence	这里的appearance就可以安字面意思理解，外貌。
+    err_code = sd_ble_gap_appearance_set(0);  // Set appearence	这里的appearance就可以安字面意思理解，外貌。
     //sd_ble_gap_appearance_set(BLE_APPEARANCE_HID_MOUSE); //自己加的
+    APP_ERROR_CHECK(err_code);// Check for errors
+
+    err_code =  sd_ble_gap_tx_power_set	(4); //设置信号发射强度
     APP_ERROR_CHECK(err_code);// Check for errors
 
     /*//下面是另外加的， to set the address type to “Private Resolvable address”
