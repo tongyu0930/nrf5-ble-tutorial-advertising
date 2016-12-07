@@ -82,8 +82,6 @@
 #define DEAD_BEEF                        0xDEADBEEF                                 /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
 
-static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
-
                                    
 /**@brief Callback function for asserts in the SoftDevice. 应该是关于errorcode的
  *
@@ -193,20 +191,9 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
  */
 static void on_ble_evt(ble_evt_t * p_ble_evt)
 {
-    uint32_t err_code;
 
     switch (p_ble_evt->header.evt_id)
     {
-        case BLE_GAP_EVT_CONNECTED:
-            err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
-            APP_ERROR_CHECK(err_code);
-            m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-            break;
-
-        case BLE_GAP_EVT_DISCONNECTED:
-            m_conn_handle = BLE_CONN_HANDLE_INVALID;
-            break;
-
         default:
             // No implementation needed.
             break;
@@ -292,14 +279,6 @@ void bsp_event_handler(bsp_event_t event)
     {
         case BSP_EVENT_SLEEP:
             sleep_mode_enter();
-            break;
-
-        case BSP_EVENT_DISCONNECT:
-            err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-            if (err_code != NRF_ERROR_INVALID_STATE)
-            {
-                APP_ERROR_CHECK(err_code);
-            }
             break;
 
         case BSP_EVENT_WHITELIST_OFF:
