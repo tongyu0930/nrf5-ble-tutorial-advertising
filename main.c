@@ -22,7 +22,6 @@
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
 #include "ble_advertising.h"
-#include "ble_conn_params.h"
 #include "boards.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
@@ -197,7 +196,6 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
 static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
     dm_ble_evt_handler(p_ble_evt);
-    ble_conn_params_on_ble_evt(p_ble_evt);
     bsp_btn_ble_on_ble_evt(p_ble_evt);
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
@@ -377,7 +375,7 @@ int main(void)
     uint32_t err_code;
     bool erase_bonds;
 
-    //raw data
+    //raw data， 去掉const也行。
     uint8_t const p_data[31]={0x1e,0xff,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x67,0xF7,0xDB,0x34,0xC4,0x03,0x8E,0x5C,0x0B,0xAA,0x97,0x30,0X56,0xE6};
 
     // Initialize.
