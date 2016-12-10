@@ -10,20 +10,6 @@
  *
  */
 
-/** @file
- *
- * @defgroup ble_sdk_app_template_main main.c
- * @{
- * @ingroup ble_sdk_app_template
- * @brief Template project main file.
- *
- * This file contains a template for creating a new application. It has the code necessary to wakeup
- * from button, advertise, get a connection restart advertising on disconnect and if no new
- * connection created go back to system-off mode.
- * It can easily be used as a starting point for creating a new application, the comments identified
- * with 'YOUR_JOB' indicates where and how you can customize.
- */
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -282,7 +268,7 @@ void bsp_event_handler(bsp_event_t event)
             break;
 
         case BSP_EVENT_WHITELIST_OFF:
-            err_code = ble_advertising_restart_without_whitelist();
+            err_code = ble_advertising_restart_without_whitelist(); // whitelist是在广播者里设置还是在扫描者里？
             if (err_code != NRF_ERROR_INVALID_STATE)
             {
                 APP_ERROR_CHECK(err_code);
@@ -391,6 +377,9 @@ int main(void)
     uint32_t err_code;
     bool erase_bonds;
 
+    //raw data
+    uint8_t const p_data[31]={0x1e,0xff,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x67,0xF7,0xDB,0x34,0xC4,0x03,0x8E,0x5C,0x0B,0xAA,0x97,0x30,0X56,0xE6};
+
     // Initialize.
     timers_init();
     buttons_leds_init(&erase_bonds);
@@ -401,6 +390,8 @@ int main(void)
     // Start execution.
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
+
+    sd_ble_gap_adv_data_set(p_data, sizeof(p_data), NULL, 0); // 不应该是&p_data吗！？
 
     // Enter main loop.
     for (;;)
