@@ -33,8 +33,6 @@
 #include "sensorsim.h"
 #include "nrf_gpio.h"
 #include "ble_hci.h"
-#include "ble_advdata.h"
-#include "ble_advertising.h"
 
 
 
@@ -333,7 +331,7 @@ static void advertising_init(void)
     options.ble_adv_fast_interval = APP_ADV_INTERVAL;
     options.ble_adv_fast_timeout  = APP_ADV_TIMEOUT_IN_SECONDS;
 
-    err_code = ble_advertising_init(&advdata, NULL, &options, on_adv_evt, NULL);
+    err_code = ble_advertising_init(&advdata, NULL, &options, on_adv_evt, NULL); //adv_data_encode找到这个function，里面有encoding顺序。
     //err_code = ble_advertising_init(&advdata, &scanrsp, &options, on_adv_evt, NULL); //如果加了response data，用这句。
     APP_ERROR_CHECK(err_code);
 }
