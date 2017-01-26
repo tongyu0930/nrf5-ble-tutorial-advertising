@@ -41,7 +41,7 @@
 #define CENTRAL_LINK_COUNT               0                                          /**< Number of central links used by the application. When changing this number remember to adjust the RAM settings*/
 #define PERIPHERAL_LINK_COUNT            1                                          /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
 
-#define DEVICE_NAME                      "Yu"                               /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                      "Yu99"                               /**< Name of device. Will be included in the advertising data. */
 #define APP_ADV_INTERVAL                 32                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 20 ms). */
 //#define APP_ADV_INTERVAL                 128 //led闪烁频率高于60Hz人眼才识别不出来
 #define APP_ADV_TIMEOUT_IN_SECONDS       30                                        /**< The advertising timeout in units of seconds. 设置为0为一直开？ */
@@ -118,7 +118,7 @@ static void gap_params_init(void)
     err_code = sd_ble_gap_appearance_set(0);  // Set appearence	这里的appearance就可以安字面意思理解，外貌。
     APP_ERROR_CHECK(err_code);// Check for errors
 
-    err_code =  sd_ble_gap_tx_power_set	(-40); //设置信号发射强度
+    err_code =  sd_ble_gap_tx_power_set	(0); //设置信号发射强度
     APP_ERROR_CHECK(err_code);// Check for errors
 
 }
@@ -374,7 +374,7 @@ int main(void)
     bool erase_bonds;
 
     //raw data， 去掉const也行。
-    uint8_t const p_data[31]={0x1e,0xff,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x67,0xF7,0xDB,0x34,0xC4,0x03,0x8E,0x5C,0x0B,0xAA,0x97,0x30,0X56,0xE6};
+    //uint8_t const p_data[31]={0x1e,0xff,0x01,0x01,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x61,0x67,0xF7,0xDB,0x34,0xC4,0x03,0x8E,0x5C,0x0B,0xAA,0x97,0x30,0X56,0xE6};
 
     // Initialize.
     timers_init();
@@ -384,10 +384,11 @@ int main(void)
     advertising_init();
 
     // Start execution.
-    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
+    err_code = ble_advertising_start(BLE_ADV_MODE_FAST); // beacon example里用的是sd_ble_gap_adv_start，怎么完全不一样！
     APP_ERROR_CHECK(err_code);
 
-    sd_ble_gap_adv_data_set(p_data, sizeof(p_data), NULL, 0); // 不应该是&p_data吗！？
+    //err_code = sd_ble_gap_adv_data_set(p_data, sizeof(p_data), NULL, 0); // 不应该是&p_data吗？我觉的应该因为p_data本来就是指针类型，如果p_data不是指针，才有地址，才能用&
+    //APP_ERROR_CHECK(err_code); //sizeof(p_data) Returns size in bytes
 
     // Enter main loop.
     for (;;)
